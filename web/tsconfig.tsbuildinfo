@@ -1,0 +1,1 @@
+{"root":["./src/App.tsx","./src/extraction.test.ts","./src/extraction.ts","./src/fixtures.ts","./src/main.tsx","./src/types.ts","./src/components/ItemRow.tsx","./src/views/MeetingsView.tsx","./src/views/PasteView.tsx","./src/views/PulseView.tsx","./src/views/QueueView.tsx","./src/views/RiskBoardView.tsx","./vite.config.ts"],"version":"5.9.3"}

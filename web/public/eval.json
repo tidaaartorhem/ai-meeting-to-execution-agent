@@ -1,0 +1,1 @@
+{"n": 80, "true_positives": 23, "false_positives": 23, "false_negatives": 0, "true_negatives": 34, "precision": 0.5, "recall": 1.0, "note": "golden set of 80 hand-labeled sentences (half rule hits, half misses); prediction = any extraction rule fires"}
