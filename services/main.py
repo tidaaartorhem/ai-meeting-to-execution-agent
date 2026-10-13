@@ -24,10 +24,13 @@ def run():
     print(f"{len(mids)} meetings")
     mdates = dates_mod.meeting_dates(mids)
 
+    all_turns = {mid: ingest_mod.load_turns(mid) for mid in mids}
+    series_maps = owners_mod.build_series_maps(all_turns)
+
     items, meetings, owner_rows = [], [], {}
     for mid in mids:
-        turns = ingest_mod.load_turns(mid)
-        omap = owners_mod.build_map(turns)
+        turns = all_turns[mid]
+        omap = series_maps[mid]
         mitems = extract_mod.extract_meeting(mid, turns, omap, mdates[mid])
         items.extend(mitems)
         overdue = sum(1 for it in mitems
@@ -72,7 +75,11 @@ def run():
 
     pulse = pulse_mod.build(items, TODAY, TODAY.isoformat())
     pulse_json = {k: v for k, v in pulse.items() if k != "markdown"}
-    eval_result = evaluate_mod.run()
+    try:
+        eval_result = evaluate_mod.run()
+    except FileNotFoundError:
+        eval_result = {"n": 0, "precision": 0.0, "recall": 0.0,
+                       "note": "golden set not yet labeled"}
 
     os.makedirs(OUT, exist_ok=True)
     payloads = {"items.json": items, "meetings.json": meetings,

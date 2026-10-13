@@ -69,6 +69,14 @@ def test_deadline_marker():
     assert it["due"]["kind"] == "next-meeting"
 
 
+def test_i_obligation():
+    it = x("I have to consult my legal advisor about it.")
+    assert it["rule"] == "i-obligation"
+    assert it["owner"] == "Laura"
+    it = x("I need to check the cost figures before Friday.")
+    assert it["rule"] == "i-obligation"
+
+
 def test_no_false_positive_on_well():
     assert x("Well, my favourite animal would be a monkey.") is None
 
@@ -180,9 +188,10 @@ def test_risk_overdue_and_stale_and_vague():
 
 
 def test_risk_overloaded_owner():
-    it = base_item()
+    it = base_item()  # due 2026-10-11 < TODAY -> also overdue (+30)
     r = risk_mod.score(it, {"Laura": 4}, TODAY)
-    assert r["score"] == 10 and "owner overloaded" in r["factors"]
+    assert r["score"] == 40
+    assert set(r["factors"]) == {"overdue", "owner overloaded"}
 
 
 def test_risk_capped_at_100():

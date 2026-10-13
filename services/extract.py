@@ -11,7 +11,7 @@ from . import owners as owners_mod
 
 SENT_SPLIT = re.compile(r"(?<=[.!?])\s+")
 FILLER_LEAD = re.compile(
-    r"^(?:(?:um|uh|er|ah|mm-hmm?|yeah|yep|okay|ok|right|well|so|and|but|like|"
+    r"^(?:(?:um|uh|er|ah|yes|mm-hmm?|yeah|yep|okay|ok|right|well|so|and|but|like|"
     r"actually|anyway|alright|sure|great|hi|hello)[,.\s]+)+", re.I)
 
 # (rule_name, compiled pattern, confidence)
@@ -20,8 +20,10 @@ RULES = [
      re.compile(r"\baction\s*item\b|\baction\s*:|\btodo\b|\bto-?do\b"
                 r"|\bfollow[- ]up\b", re.I), 0.80),
     ("i-commitment",
-     re.compile(r"\bi['\u2019]?ll\b|\bi will\b|\bi am going to\b"
+     re.compile(r"\bi['\u2019]ll\b|\bi will\b|\bi am going to\b"
                 r"|\bi['\u2019]?m gonna\b", re.I), 0.90),
+    ("i-obligation",
+     re.compile(r"\bi have to\b|\bi need to\b", re.I), 0.70),
     ("you-commitment",
      re.compile(r"\byou need to\b|\byou should\b|\byou have to\b|\byou must\b"
                 r"|\byou['\u2019]?re going to\b|\byou['\u2019]?re gonna\b"
@@ -29,13 +31,13 @@ RULES = [
                 re.I), 0.75),
     ("we-commitment",
      re.compile(r"\bwe need to\b|\bwe should\b|\bwe have to\b|\bwe must\b"
-                r"|\bwe['\u2019]?ll\b|\bwe will\b|\blet['\u2019]?s\b", re.I),
+                r"|\bwe['\u2019]ll\b|\bwe will\b|\blet['\u2019]s\b", re.I),
      0.65),
     ("deadline-marker",
      re.compile(r"\bbefore the next meeting\b|\bby next time\b|\bfor next time\b"
                 r"|\bbefore we meet again\b", re.I), 0.70),
     ("third-commitment",
-     re.compile(r"\bhe['\u2019]?ll\b|\bshe['\u2019]?ll\b|\bhe will\b"
+     re.compile(r"\bhe['\u2019]ll\b|\bshe['\u2019]ll\b|\bhe will\b"
                 r"|\bshe will\b", re.I), 0.60),
     ("need-to",
      re.compile(r"\bneed(?:s)? to\b", re.I), 0.60),
@@ -45,6 +47,7 @@ RULES = [
 _OWNER_MODE = {
     "action-marker": True,
     "i-commitment": True,
+    "i-obligation": True,
     "you-commitment": False,   # "you" without a name -> team can't tell who
     "we-commitment": False,    # team-owned -> Unassigned by design
     "deadline-marker": True,
